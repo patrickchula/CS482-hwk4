@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Cs482-hwk4 by patrickchula</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Cs482-hwk4</h1>
+        <h2></h2>
+        <a href="https://github.com/patrickchula/CS482-hwk4" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a id="part-1" class="anchor" href="#part-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><strong>PART 1</strong>
+</h1>
+
+<p>I needed to use SURF for this part, finding the matches. I spent many hours trying to get this to work better with OpenCV 2.4.9 (which does not have cv2.drawMatches); however, 3.1.0 does not have SIFT or SURF. I used SIFT to find keypoints. Then the matcher used was Flann Matcher. This was very similar to homework 3.</p>
+
+<h2>
+<a id="image-pairs-query---train" class="anchor" href="#image-pairs-query---train" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Image pairs (query - train)</h2>
+
+<h3>
+<a id="1194--1207" class="anchor" href="#1194--1207" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1194 – 1207</h3>
+
+<p>I chose this pair because the train was a very clear picture of the motorcycle box. The other one because it had the motorcycle on an angle. I actually chose 1195 sometimes. But this is my final one</p>
+
+<h3>
+<a id="1190---1202" class="anchor" href="#1190---1202" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1190 - 1202</h3>
+
+<p>I chose this pair for the opposite reason. The train is a clear image of the people, while the query is slanted.</p>
+
+<h1>
+<a id="part-2" class="anchor" href="#part-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><strong>PART 2</strong>
+</h1>
+
+<p>For this part I used cv2.findHomography(). I found code for this on OpenCV.org. I made this work so that it would take my drawMatches, then run cv2.findHomography. Its parameters are the points of the train image, the points of the query image and then the transformation computation method. I chose to RANSAC with a threshold of 5.
+    Then I was able to get the homography matrix from the image pairs. It was saved as the return value of cv2.findHomography(). The matrices which I got for each of the image pairs is as follows:</p>
+
+<h2>
+<a id="1194--query-image-------1207--train-image" class="anchor" href="#1194--query-image-------1207--train-image" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><strong>1194</strong>  query image  ---  <strong>1207</strong>  train image</h2>
+
+<pre><code>    [[  7.91069528e+00   7.20581007e-01  -1.08773532e+04]
+     [  2.40167972e-01   5.93355370e+00  -1.04978470e+03]
+    [  1.52428007e-03   4.16039219e-04   1.00000000e+00]]
+</code></pre>
+
+<h2>
+<a id="1190--query-image-------1202--train-image" class="anchor" href="#1190--query-image-------1202--train-image" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><strong>1190</strong>  query image  ---  <strong>1202</strong>  train image</h2>
+
+<pre><code>    [[  7.25831951e-01   1.21802370e-02  -1.93386905e+02]
+     [ -1.33818424e-01   5.83418901e-01   7.24908842e+01]
+     [ -6.96946679e-04  -2.99849602e-06   1.00000000e+00]]
+</code></pre>
+
+<h1>
+<a id="part-3" class="anchor" href="#part-3" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><strong>PART 3</strong>
+</h1>
+
+<p>This is when I used my homography matrix from the Part 2 in order to warp the query image. For each of my image pairs, you can see above to see what would warp them to have the query image look more like the train image. For that I used cv2.warpPerspective(). In order for it to work I need to have the train image and the homography matrix. Then those 2 were used to warp the query image. Then I saved the file of the warped image.</p>
+
+<h3>
+<a id="1194-warped-to-1207" class="anchor" href="#1194-warped-to-1207" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1194 warped to 1207</h3>
+
+<p>I chose this pair because the train was a very clear picture of the motorcycle box. The other one because it had the motorcycle on an angle. I actually chose 1195 sometimes. But this is my final one</p>
+
+<h3>
+<a id="1190-warped-to-1202" class="anchor" href="#1190-warped-to-1202" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1190 warped to 1202</h3>
+
+<h1>
+<a id="sources" class="anchor" href="#sources" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Sources:</h1>
+
+<p><a href="http://docs.opencv.org/3.0-beta/doc/py_tutorials/py_feature2d/py_feature_homography/py_feature_homography.html">http://docs.opencv.org/3.0-beta/doc/py_tutorials/py_feature2d/py_feature_homography/py_feature_homography.html</a>
+<a href="http://stackoverflow.com/questions/20259025/module-object-has-no-attribute-drawmatches-opencv-python">http://stackoverflow.com/questions/20259025/module-object-has-no-attribute-drawmatches-opencv-python</a></p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/patrickchula/CS482-hwk4/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/patrickchula/CS482-hwk4/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/patrickchula/CS482-hwk4"></a> is maintained by <a href="https://github.com/patrickchula">patrickchula</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
